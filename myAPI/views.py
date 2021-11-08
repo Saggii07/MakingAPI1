@@ -1,8 +1,7 @@
 
 
 from django.contrib.auth.models import User
-from django.db.models import fields, query
-from django.http.response import JsonResponse
+
 from django.shortcuts import render
 from rest_framework import generics,serializers
 from rest_framework.views import APIView
@@ -37,11 +36,11 @@ class RegistrationAPIView(generics.GenericAPIView):
                 "RequestId": str(uuid.uuid4()),
                 "Message": "User created successfully",
                 "User":serializer.data},status=status.HTTP_201_CREATED)
-        return Response({"Errors": serializers.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"Errors": serializers.get_error_detail}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
-#Get The Advisors List
+#Get The Advisors List for
 class AdviserList(APIView):
 
     def get(self,pk):
@@ -49,19 +48,25 @@ class AdviserList(APIView):
         advisor = Advisor.objects.values('id','advisor_name','advisor_photo_url',)
         serializer= AdvisorSerializer(advisor,many=True)
         
-        return Response(serializer.data,{"user":user})
+        return Response(serializer.data,user.id)
 
-# Booking Adviser i used model user_id and and advisor id for booking 
+# for Booking Adviser used model with fielsds user_id and and advisor id for booking (foreign key)
 class BookedAdvisor(generics.ListCreateAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
 
-class BookedAdvisorList(generics.RetrieveUpdateDestroyAPIView):
+class BookedAdvisorDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
     
-        
-        
+# For Booked Advisor list
+
+class BookedAdvisorlist(generics.RetrieveUpdateDestroyAPIView):
+    def get(self,pk):
+        user=User.objects.get(pk=pk)
+        booked_advisor_list = Booking.objects.all()
+        serializer=BookingSerializer(booked_advisor_list,many=True)
+        return Response(serializer.data,user.id)
 
 
 
