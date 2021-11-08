@@ -8,7 +8,7 @@ urlpatterns = [
     path('api/v1/',include('myAPI.urls')),
     path('user/register/',RegistrationAPIView.as_view(),name='register'),
     path('user/login/',TokenObtainPairView.as_view(),name='login'),
-    path('user/<int:pk>/advisor',views.AdviserList.as_view(),name='getadviserlist')
+    path('user/advisor',views.AdviserList.as_view(),name='getadviserlist')
     
    
 

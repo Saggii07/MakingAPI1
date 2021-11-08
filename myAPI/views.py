@@ -51,9 +51,12 @@ class AdviserList(APIView):
         
         return Response(serializer.data,{"user":user})
 
-# Booking Adviser
+# Booking Adviser i used model user_id and and advisor id for booking 
+class BookedAdvisor(generics.ListCreateAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
 
-class BookedAdvisor(generics.RetrieveUpdateDestroyAPIView):
+class BookedAdvisorList(generics.RetrieveUpdateDestroyAPIView):
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
     
